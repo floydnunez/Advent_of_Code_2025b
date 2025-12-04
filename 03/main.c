@@ -67,19 +67,9 @@ int main(int argc, char **argv){
                 subtotal += d->val * p(i);
                 free(d);
             }
-            char ssub[1023];
-            sprintf(ssub, "%ld", subtotal);
-            int len = strlen(ssub);
-            printf("subtotal    : %ld = %s len: %d\n", subtotal, ssub, len);
-            if (len != 12) {
-                printf("fatal, length is not 12? %d\n", len);
-                exit(1);
-            }
             total_2 += subtotal;
         }
     }
     printf("total joltage part 1: %d\n", total);
     printf("total joltage part 2: %ld\n", total_2);
-    //1719903126275598 too high
-    //997766652324 too low
 }
