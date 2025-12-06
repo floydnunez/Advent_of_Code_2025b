@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "uthash.h"
 
+char *FILENAME = "input/1.txt";
+
 typedef struct _data {
     char name[10];
     int value;
@@ -23,7 +25,7 @@ int main(int argc, char **argv){
     int bufferLength = 255;
     char buffer[bufferLength];
 
-    f = fopen("input/demo.txt", "r");
+    f = fopen(FILENAME, "r");
     if (f == NULL)
         exit(EXIT_FAILURE);
 
@@ -36,4 +38,7 @@ int main(int argc, char **argv){
     }
 
     printf("hello %d\n", HASH_COUNT(hasht));
+    long hi = 348548952146313;
+    long lo =  338205036561241;
+    printf("%ld to %ld = %ld\n", hi, lo, (hi - lo));
 }
