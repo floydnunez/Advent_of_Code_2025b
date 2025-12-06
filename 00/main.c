@@ -38,4 +38,7 @@ int main(int argc, char **argv){
     }
 
     printf("hello %d\n", HASH_COUNT(hasht));
+    long hi = 348548952146313;
+    long lo =  338205036561241;
+    printf("%ld to %ld = %ld\n", hi, lo, (hi - lo));
 }
