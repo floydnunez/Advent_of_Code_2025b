@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "uthash.h"
+#include <ctype.h>
 
 char *FILENAME = "input/1.txt";
 
