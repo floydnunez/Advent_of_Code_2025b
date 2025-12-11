@@ -3,9 +3,12 @@
 #include "uthash.h"
 #include <ctype.h>
 
-char *FILENAME = "input/1.txt";
+char *FILENAME = "input/input.txt";
 
 int count(int MAXX, int MAXY, int x, int y, char grid[MAXY][MAXX], int oldtimelines);
+
+long results[143][143];
+long down(int MAXX, int MAXY, int x, int y, char grid[MAXY][MAXX]);
 
 int main(int argc, char **argv){
     int MAXX, MAXY;
@@ -71,50 +74,58 @@ int main(int argc, char **argv){
     }
 
     printf("part 1 total = %d\n", split);
-    printf("part 1? total ^ = %d total ^ on even lines %d\n", total, total_even);
     //1649 too high. it's for someone else? (it was just the total of ^s which is wrong)
     //1524
+    int S = 0;
+    for (int xx = 0; xx < MAXX; xx++) {
+        if (grid[0][xx] == 'S') {
+            S = xx;
+            break;
+        }
+    }
+    for (int yy = 0; yy < 143; yy++) {
+        for (int xx = 0; xx < 143; xx++) {
+            results[yy][xx] = -1;
+        }
+    }
+    long timelines = down(MAXX, MAXY, 0, S, grid);
 
     //part 2
-    int timelines = 0;
-    for (int xx = 0; xx < MAXX; xx++) {
-        if (grid[MAXY-1][xx] == '|') {
-            timelines += count(MAXX, MAXY, MAXY-1, xx, grid, 0);
-        }
-    }
-    printf("part 2: timelines: %d\n", timelines);
+    printf("part 2: timelines: %ld\n", timelines);
     //2937 too low
+    //32982105837605 correct
 
 }
-
-int count(int MAXX, int MAXY, int y, int x, char grid[MAXY][MAXX], int oldtimelines) {
-    printf("referencing %d, %d in \t", y, x);
-    for (int xx = 0; xx < MAXX; xx++) {
-        printf("%c", x != xx && grid[y][xx] == '|' ? '.' : grid[y][xx]);
+long down(int MAXX, int MAXY, int y, int x, char grid[MAXY][MAXX]) {
+    printf("down! y: %d, x:%d, %c\n", y, x, grid[y][x]);
+    if(results[y][x] >= 0) {
+        printf("cached result[%d][%d] = %ld\n", y, x, results[y][x]);
+        return results[y][x];
     }
-    printf("\n");
-
-    if (grid[y][x] == 'S' || y <= 0) {
-        printf("inicio at %d %d, tm: %d\n", y, x, oldtimelines);
-        return oldtimelines + 1;
+    if (y >= MAXY) {
+        printf("out the bottom at %d, %d\n", y, x);
+        return 1;
     }
-    if (grid[y-1][x] == '|' || grid[y-1][x] == 'S') {
-        return count(MAXX, MAXY, y-1, x, grid, oldtimelines);
+    if (x >= MAXX) { //??
+        printf("exiting through the side? shouldn't happen\n");
+        return 0;
     }
-    if (grid[y-1][x] == '.') {
-        int subtotal = oldtimelines;
-        if (x > 0) {
-            if (grid[y][x-1] == '^') {
-                subtotal += count(MAXX, MAXY, y, x-1, grid, oldtimelines);
-            }
-        }
-        if (x < MAXX) {
-            if (grid[y][x+1] == '^') {
-                subtotal += count(MAXX, MAXY, y, x+1, grid, oldtimelines);
-            }
-        }
-        return subtotal;
+    //printf("down! y: %d, x:%d, %c\n", y, x, grid[y][x]);
+    if (grid[y][x] == '|' || grid[y][x] == 'S') {
+        long val = down(MAXX, MAXY, y+1, x, grid);
+        results[y+1][x] = val;
+        printf("caching temp y= %d and x= %d. value: %ld\n", y, x, val);
+        return val;
     }
-    printf("default at %d %d\n", y, x);
-    return oldtimelines;
+    if (grid[y][x] == '^') {
+        long val_minus_1 = down(MAXX, MAXY, y, x-1, grid);
+        long val_plus_1 = down(MAXX, MAXY, y, x+1, grid);
+        results[y][x-1] = val_minus_1;
+        results[y][x+1] = val_plus_1;
+        results[y][x] = val_minus_1 + val_plus_1;
+        printf("caching temp values y= %d and x= %d and %d. value = %ld and %ld\n", y, x-1, x+1, val_minus_1, val_plus_1);
+        return val_minus_1 + val_plus_1;
+    }
+    printf("fell through? shouldn't also happen?\n");
+    return 0;
 }
