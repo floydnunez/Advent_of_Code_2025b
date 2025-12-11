@@ -95,7 +95,7 @@ int count(int MAXX, int MAXY, int y, int x, char grid[MAXY][MAXX], int oldtimeli
     printf("\n");
 
     if (grid[y][x] == 'S' || y <= 0) {
-        printf("inicio at %d %d\n", y, x);
+        printf("inicio at %d %d, tm: %d\n", y, x, oldtimelines);
         return oldtimelines + 1;
     }
     if (grid[y-1][x] == '|' || grid[y-1][x] == 'S') {
