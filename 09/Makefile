@@ -1,6 +1,6 @@
 
 main:
-	gcc main.c -I../include -o solution
+	gcc -g main.c -I../include -o solution
 
 clean:
 	rm -f solution
